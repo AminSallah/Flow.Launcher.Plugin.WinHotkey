@@ -5,7 +5,7 @@ using System.Threading;
 using System.Runtime.InteropServices;
 namespace Flow.Launcher.Plugin.WinHotkey
 {
-    public class Win : IPlugin
+    public class Win: IPlugin
     {
         private PluginInitContext _context;
         private static bool isCallbackInProgress = false;
@@ -15,14 +15,12 @@ namespace Flow.Launcher.Plugin.WinHotkey
         {
             _context = context;
             _context.API.RegisterGlobalKeyboardCallback(KeyboardCallback);
-
         }
 
         public List<Result> Query(Query query)
         {
             return new List<Result>();
         }
-
         bool KeyboardCallback(int keyCode, int additionalInfo, SpecialKeyState keyState)
         {
             if (_context.CurrentPluginMetadata.Disabled)
@@ -34,7 +32,7 @@ namespace Flow.Launcher.Plugin.WinHotkey
                 return true;
             }
 
-            if (additionalInfo == 91)
+            if (additionalInfo == 91 && !keyState.WinPressed)
             {
                 isCallbackInProgress = true;
                 KeyboardSimulator.SimulateAltSpace();
@@ -42,7 +40,7 @@ namespace Flow.Launcher.Plugin.WinHotkey
                 // Reset the flag after a delay to allow for debouncing
                 ThreadPool.QueueUserWorkItem(state =>
                 {
-                    Thread.Sleep(300);
+                    Thread.Sleep(200);
                     isCallbackInProgress = false;
                 });
 
