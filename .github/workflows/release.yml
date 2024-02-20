@@ -33,18 +33,14 @@ jobs:
       - run: echo ${{steps.version.outputs.prop}}
 
       - name: Restore dependencies
-        run: |
-          cd
-          dotnet restore
+        run:  dotnet restore
 
       - name: Build
-        run: |
-          cd
-          dotnet publish -c Release -r win-x64 --no-self-contained Flow.Launcher.Plugin.WinHotkey.csproj
+        run: dotnet publish -c Release -r win-x64 --no-self-contained Flow.Launcher.Plugin.WinHotkey.csproj
           7z a -tzip "Flow.Launcher.Plugin.WinHotkey.zip" "./bin/Release/win-x64/publish/*"
 
       - name: Publish
         uses: softprops/action-gh-release@v1
         with:
-          files: "src/Flow.Launcher.Plugin.WinHotkey.zip"
+          files: "Flow.Launcher.Plugin.WinHotkey.zip"
           tag_name: "v${{steps.version.outputs.prop}}"
