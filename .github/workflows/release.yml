@@ -34,10 +34,12 @@ jobs:
 
       - name: Restore dependencies
         run: |
+          cd
           dotnet restore
 
       - name: Build
         run: |
+          cd
           dotnet publish -c Release -r win-x64 --no-self-contained Flow.Launcher.Plugin.WinHotkey.csproj
           7z a -tzip "Flow.Launcher.Plugin.WinHotkey.zip" "./bin/Release/win-x64/publish/*"
 
