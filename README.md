@@ -1,15 +1,19 @@
-Simple plugin to trigger flow launcher using `LWin` button instead of `Alt` + `Space` 
+# Flow Launcher LWin Plugin
+
+This is a simple plugin designed to activate Flow Launcher using the `LWin` (Left Windows) button instead of the default `Alt` + `Space` hotkey.
 
 ## Installation
-1. Start by Installing the plugin
-2. Ensure that your flow launcher hotkey is Alt + Space
-   ![Hotkey](Flowlaunchersettings.png)
+
+1. Begin by installing the plugin.
+2. Ensure that your Flow Launcher hotkey is set to `Alt + Space`.
+
+   ![Flow Launcher Settings](Flowlaunchersettings.png)
 
 ## Usage
 
-- To trigger Flow Launcher simpley press LWin
-- To use Main Win shortcuts `Win + R` or  `Win + D` etc..:
+- To trigger Flow Launcher, simply press the `LWin` button.
+- For Main Windows shortcuts like `Win + R` or `Win + D`:
 
-  - Hold LWin till flow launcher menu be hidden then press other key
- 
-- To show start menu Hold LWin till flow launcher menu be hidden then release.
+  - Hold down the `LWin` button until the Flow Launcher menu is hidden, then press the desired key combination.
+
+- To show the start menu, hold down the `LWin` button until the Flow Launcher menu is hidden, then release the `LWin` button.
