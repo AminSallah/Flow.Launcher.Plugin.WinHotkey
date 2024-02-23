@@ -1,138 +1,98 @@
+
 using System;
 using System.Collections.Generic;
 using Flow.Launcher.Plugin;
-using System.Threading;
-using System.Runtime.InteropServices;
+using System.Windows.Input;
+using System.Diagnostics;
+using System.Windows.Controls;
+using AutoHotkey.Interop;
 namespace Flow.Launcher.Plugin.WinHotkey
 {
-    public class Win: IPlugin
+    public class WinHotkey : IPlugin, ISettingProvider
     {
         private PluginInitContext _context;
-        private static bool isCallbackInProgress = false;
-
+        private static AutoHotkeyEngine _ahk;
+        private Settings _settings;
 
         public void Init(PluginInitContext context)
         {
             _context = context;
-            _context.API.RegisterGlobalKeyboardCallback(KeyboardCallback);
+            _settings = _context.API.LoadSettingJsonStorage<Settings>();
+            _ahk = new AutoHotkeyEngine();
+            Hook();
         }
 
         public List<Result> Query(Query query)
         {
             return new List<Result>();
         }
-        bool KeyboardCallback(int keyCode, int additionalInfo, SpecialKeyState keyState)
+        public void Hook()
         {
-            if (_context.CurrentPluginMetadata.Disabled)
+            if (!_context.CurrentPluginMetadata.Disabled)
             {
-                return true;
+                string Timeout = _settings.Timeout;
+                string Script = @"#Persistent
+                return
+
+                ~LWin::
+                    Send, {Blind}{VKFF}
+                    KeyboardStartTime := A_TickCount ; Record the start time
+                    KeyWait, LWin ; Wait for the Left Windows key to be released
+
+                    ; Calculate the time elapsed
+                    ElapsedTime := A_TickCount - KeyboardStartTime
+                    if (ElapsedTime < Timeout) ; Time between press and release is less than 200 milliseconds
+                    {
+                        SendInput, !{Space}
+                    }
+                    
+                    return
+                ";
+                Script = Script.Replace("Timeout", Timeout);
+                _ahk.ExecRaw(Script);
             }
-            if (isCallbackInProgress)
-            {
-                return true;
-            }
-
-            if (additionalInfo == 91 && !keyState.WinPressed)
-            {
-                isCallbackInProgress = true;
-                KeyboardSimulator.SimulateAltSpace();
-
-                // Reset the flag after a delay to allow for debouncing
-                ThreadPool.QueueUserWorkItem(state =>
-                {
-                    Thread.Sleep(200);
-                    isCallbackInProgress = false;
-                });
-
-                return false;
-            }
-
-            return true;
-            
         }
+
+        public void Unhook()
+        {
+            _ahk.Terminate();
+        }
+
+        public Control CreateSettingPanel()
+		{
+			return new WinHotkeySettings(_settings);
+		}
+
         public void Dispose()
         {
-            _context.API.RemoveGlobalKeyboardCallback(KeyboardCallback);
+            Unhook();
         }
     }
 
-    public class KeyboardSimulator
+
+    public partial class WinHotkeySettings : UserControl
+	{
+		private readonly Settings _settings;
+		public WinHotkeySettings(Settings settings)
+		{
+			this.DataContext = settings;
+			this.InitializeComponent();
+		}
+	}
+    public class Settings
     {
-        [DllImport("user32.dll", SetLastError = true)]
-        public static extern uint SendInput(uint nInputs, INPUT[] pInputs, int cbSize);
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct INPUT
+        private string _timeout = "200";
+        public string Timeout 
         {
-            public int type;
-            public InputUnion U;
-        }
+            get 
+            {
+                return _timeout;
+            }
+            set
+            {
+                _timeout = value;
+            }
 
-        [StructLayout(LayoutKind.Explicit)]
-        public struct InputUnion
-        {
-            [FieldOffset(0)]
-            public MOUSEINPUT mi;
-            [FieldOffset(0)]
-            public KEYBDINPUT ki;
-            [FieldOffset(0)]
-            public HARDWAREINPUT hi;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct MOUSEINPUT
-        {
-            public int dx;
-            public int dy;
-            public uint mouseData;
-            public uint dwFlags;
-            public uint time;
-            public IntPtr dwExtraInfo;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct KEYBDINPUT
-        {
-            public ushort wVk;
-            public ushort wScan;
-            public uint dwFlags;
-            public uint time;
-            public IntPtr dwExtraInfo;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct HARDWAREINPUT
-        {
-            public uint uMsg;
-            public ushort wParamL;
-            public ushort wParamH;
-        }
-
-        private const ushort VK_MENU = 0x12;
-        private const ushort VK_SPACE = 0x20;
-        private const uint KEYEVENTF_KEYDOWN = 0x0000;
-        private const uint KEYEVENTF_KEYUP = 0x0002;
-        private const int INPUT_KEYBOARD = 1;
-
-        public static void SimulateAltSpace()
-        {
-            INPUT[] inputs = new INPUT[4];
-
-            inputs[0].type = INPUT_KEYBOARD;
-            inputs[0].U.ki.wVk = VK_MENU;
-
-            inputs[1].type = INPUT_KEYBOARD;
-            inputs[1].U.ki.wVk = VK_SPACE;
-
-            inputs[2].type = INPUT_KEYBOARD;
-            inputs[2].U.ki.wVk = VK_SPACE;
-            inputs[2].U.ki.dwFlags = KEYEVENTF_KEYUP;
-
-            inputs[3].type = INPUT_KEYBOARD;
-            inputs[3].U.ki.wVk = VK_MENU;
-            inputs[3].U.ki.dwFlags = KEYEVENTF_KEYUP;
-
-            SendInput((uint)inputs.Length, inputs, Marshal.SizeOf(typeof(INPUT)));
         }
     }
 }

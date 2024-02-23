@@ -4,9 +4,9 @@
     "Name": "Win Hotkey",
     "Description": "Trigger Flow Launcher by Win Key",
     "Author": "Amin Salah",
-    "Version": "1.0.0",
+    "Version": "2.0.0",
     "Language": "csharp",
-    "Website": "https://github.com/AminSallah/Flow.Launcher.Plugin.WinHotkey",
+    "Website": "https://github.com/AminSallah/Flow.Launcher.Plugin.Win",
     "IcoPath": "app.png",
     "ExecuteFileName": "Flow.Launcher.Plugin.WinHotkey.dll"
 }
