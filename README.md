@@ -14,6 +14,6 @@ This is a simple plugin designed to activate Flow Launcher using the `LWin` (Lef
 - To trigger Flow Launcher, simply press the `LWin` button.
 - For Main Windows shortcuts like `Win + R` or `Win + D`:
 
-  - Hold down the `LWin` button until the Flow Launcher menu is hidden, then press the desired key combination.
+  - Hold down the `LWin` button until the timeout exceeds `200 ms` by default (which can be changed in settings), then press the desired key combination.
 
-- To show the start menu, hold down the `LWin` button until the Flow Launcher menu is hidden, then release the `LWin` button.
+- To show the start menu, hold down the `LWin` button until the timeout exceeds `200 ms`, then release the `LWin` button.
