@@ -5,6 +5,10 @@ This is a simple plugin designed to activate Flow Launcher using the `LWin` (Lef
 ## Installation
 
 1. Begin by installing the plugin.
+
+   ```
+   pm install Win Hotkey
+   ```
 2. Ensure that your Flow Launcher hotkey is set to `Alt + Space`.
 
    ![Flow Launcher Settings](Flowlaunchersettings.png)
