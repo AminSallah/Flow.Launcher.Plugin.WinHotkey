@@ -1,9 +1,5 @@
 
-using System;
 using System.Collections.Generic;
-using Flow.Launcher.Plugin;
-using System.Windows.Input;
-using System.Diagnostics;
 using System.Windows.Controls;
 using AutoHotkey.Interop;
 namespace Flow.Launcher.Plugin.WinHotkey
@@ -31,24 +27,25 @@ namespace Flow.Launcher.Plugin.WinHotkey
             if (!_context.CurrentPluginMetadata.Disabled)
             {
                 string Timeout = _settings.Timeout;
-                string Script = @"#Persistent
+                string Script = $@"#Persistent
                 return
 
                 ~LWin::
-                    Send, {Blind}{VKFF}
+                    Send, {{Blind}}{{VKFF}}
                     KeyboardStartTime := A_TickCount ; Record the start time
                     KeyWait, LWin ; Wait for the Left Windows key to be released
 
                     ; Calculate the time elapsed
                     ElapsedTime := A_TickCount - KeyboardStartTime
-                    if (ElapsedTime < Timeout) ; Time between press and release is less than 200 milliseconds
-                    {
-                        SendInput, !{Space}
-                    }
+                    if (ElapsedTime < {Timeout}) ; Time between press and release is less than 200 milliseconds
+                    {{
+                        ; Simulate Alt+Space
+                        Send, !{{Space}}
+                        return
+                    }}
                     
                     return
                 ";
-                Script = Script.Replace("Timeout", Timeout);
                 _ahk.ExecRaw(Script);
             }
         }
