@@ -1,6 +1,6 @@
 
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Text.Json;
 using System.Windows.Controls;
 using AutoHotkey.Interop;
@@ -22,9 +22,8 @@ namespace Flow.Launcher.Plugin.WinHotkey
 
         string MainSettingsPath()
         {
-            return System.IO.Path.Combine(
-                          System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData),
-                          "FlowLauncher", "Settings","Settings.json");
+            string SettingsJsonPath = Path.GetDirectoryName(Path.GetDirectoryName(_context.CurrentPluginMetadata.PluginDirectory));
+            return Path.Combine(SettingsJsonPath,"Settings", "Settings.json");
         }
 
         Dictionary<string, JsonElement> LoadSettingsJson()
@@ -81,7 +80,7 @@ namespace Flow.Launcher.Plugin.WinHotkey
                             break;
                         case "back":
                             keys[i] = "{Backspace}";
-                            break;    
+                            break;
                         case "oemquestion":
                             keys[i] = "/";
                             break;
