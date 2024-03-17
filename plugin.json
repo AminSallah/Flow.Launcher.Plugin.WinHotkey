@@ -6,7 +6,7 @@
     "Author": "Amin Salah",
     "Version": "3.1.0",
     "Language": "csharp",
-    "Website": "https://github.com/AminSallah/Flow.Launcher.Plugin.Win",
+    "Website": "https://github.com/AminSallah/Flow.Launcher.Plugin.WinHotkey",
     "IcoPath": "app.png",
     "ExecuteFileName": "Flow.Launcher.Plugin.WinHotkey.dll"
 }
