@@ -155,11 +155,14 @@ namespace Flow.Launcher.Plugin.WinHotkey
 
                     ; Calculate the time elapsed
                     ElapsedTime := A_TickCount - KeyboardStartTime
-                    if (ElapsedTime < {Timeout}) ; Time between press and release is less than 200 milliseconds
+                    if (A_PriorKey = ""LWin"")
                     {{
-                        ; Simulate Alt+Space
-                        Send, {GetHotkeyInAhkFormat()}
-                        return
+                        if (ElapsedTime < {Timeout}) ; Time between press and release is less than 200 milliseconds
+                        {{
+                            ; Simulate Alt+Space
+                            Send, {GetHotkeyInAhkFormat()}
+                            return
+                        }}
                     }}
                     
                     return
