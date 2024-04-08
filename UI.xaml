@@ -13,10 +13,13 @@
     <Grid Margin="0">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
+
         <StackPanel
-            Grid.Row="0"
+            Grid.Row="1"
             HorizontalAlignment="Stretch"
             Orientation="Vertical">
             <DockPanel
@@ -41,5 +44,61 @@
                 </StackPanel>
             </DockPanel>
         </StackPanel>
+
+
+        <StackPanel
+            Grid.Row="0"
+            HorizontalAlignment="Stretch"
+            Orientation="Vertical">
+            <DockPanel
+                Margin="15"
+                HorizontalAlignment="Stretch"
+                LastChildFill="True">
+                <TextBlock
+                    Margin="0,5,0,0"
+                    Text="Modifier" 
+                    />
+                <StackPanel
+                    Margin="0,0,18,0"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    DockPanel.Dock="Right">
+                    <ComboBox
+                        Width="360"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        SelectedItem="{Binding InterrModifier}"
+                        ItemsSource="{Binding Modifiers}"/>
+                </StackPanel>
+            </DockPanel>
+        </StackPanel>
+
+        <StackPanel
+            Grid.Row="2"
+            HorizontalAlignment="Stretch"
+            Orientation="Vertical">
+            <DockPanel
+                Margin="15"
+                HorizontalAlignment="Stretch"
+                LastChildFill="True">
+                <TextBlock
+                    Margin="0,5,0,0"
+                    Text="Trigger by double tap" 
+                    />
+                <StackPanel
+                    Margin="0,0,18,0"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    DockPanel.Dock="Right">
+                    
+                    <CheckBox
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        IsChecked="{Binding DoubleTap}"
+                        Content=""/>
+                </StackPanel>
+            </DockPanel>
+        </StackPanel>
+
     </Grid>
 </UserControl>

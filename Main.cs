@@ -23,7 +23,7 @@ namespace Flow.Launcher.Plugin.WinHotkey
         string MainSettingsPath()
         {
             string SettingsJsonPath = Path.GetDirectoryName(Path.GetDirectoryName(_context.CurrentPluginMetadata.PluginDirectory));
-            return Path.Combine(SettingsJsonPath,"Settings", "Settings.json");
+            return Path.Combine(SettingsJsonPath, "Settings", "Settings.json");
         }
 
         Dictionary<string, JsonElement> LoadSettingsJson()
@@ -147,29 +147,54 @@ namespace Flow.Launcher.Plugin.WinHotkey
                 string Timeout = _settings.Timeout;
                 string Script = $@"#Persistent
                 return
-
-                ~LWin::
+                {(_settings.DoubleTap ? "Interr_PriorKey := \"\"\"\" " : "")}
+                {(_settings.DoubleTap ? "First_Tap_Time := 0 " : "")}
+                ~{_settings.InterrModifier}::
                     Send, {{Blind}}{{VKFF}}
                     KeyboardStartTime := A_TickCount ; Record the start time
-                    KeyWait, LWin ; Wait for the Left Windows key to be released
-
+                    KeyWait, {_settings.InterrModifier}
+                    
                     ; Calculate the time elapsed
                     ElapsedTime := A_TickCount - KeyboardStartTime
-                    if (A_PriorKey != ""LWin"")
+
+                    if (A_PriorKey != ""{_settings.InterrModifier}"")
                     {{
+                        {(_settings.DoubleTap ? "Interr_PriorKey := A_PriorKey" : "")}
                         Send, #
                         return
                     }}
-                        if (ElapsedTime < {Timeout}) ; Time between press and release is less than 200 milliseconds
-                        {{
-                            ; Simulate Alt+Space
-                            Send, {GetHotkeyInAhkFormat()}
-                            return
-                        }}
+
+                    {(_settings.DoubleTap ? $@"
+                    if (Interr_PriorKey != ""{_settings.InterrModifier}"" || (A_TickCount - First_Tap_Time) > 500)
+                    {{
+                        First_Tap_Time := A_TickCount  ; Set First_Tap_Time to the current tick count
+                        Interr_PriorKey := A_PriorKey
+                        return
+                    }}
+                    " : "")}
+
                     
-                    
-                    return
+                    {(_settings.DoubleTap ? $@"
+                    if (Interr_PriorKey != ""{_settings.InterrModifier}"" || (A_TickCount - First_Tap_Time) > 500)
+                    {{
+                        First_Tap_Time := A_TickCount  ; Set First_Tap_Time to the current tick count
+                        Interr_PriorKey := A_PriorKey
+                        return
+                    }}
+                    " : "")}
+
+                    if ({(_settings.DoubleTap ? $"Interr_PriorKey = \"{_settings.InterrModifier}\" && " : "")}ElapsedTime < {Timeout}) ; Time between press and release is less than 200 milliseconds
+                    {{
+                        ; Simulate Alt+Space
+                        Send, {GetHotkeyInAhkFormat()}
+                        return
+                    }}
+                return
                 ";
+
+
+
+
                 _ahk.ExecRaw(Script);
             }
         }
@@ -203,6 +228,9 @@ namespace Flow.Launcher.Plugin.WinHotkey
     public class Settings
     {
         private string _timeout = "200";
+        public bool DoubleTap {get; set;} = true;
+        public string InterrModifier {get; set;} = "LControl";
+        public List<string> Modifiers {get; } = new List<string> {"LWin", "LControl", "LAlt", "LShift"};
         public string Timeout
         {
             get
