@@ -15,6 +15,7 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
 
@@ -28,7 +29,7 @@
                 LastChildFill="True">
                 <TextBlock
                     Margin="0,5,0,0"
-                    Text="Maximum press Time to trigger flow (ms), Require restart to apply." 
+                    Text="Maximum press time to trigger flow (ms), Require restart to apply:" 
                     />
                 <StackPanel
                     Margin="0,0,18,0"
@@ -56,7 +57,7 @@
                 LastChildFill="True">
                 <TextBlock
                     Margin="0,5,0,0"
-                    Text="Modifier" 
+                    Text="Modifier:" 
                     />
                 <StackPanel
                     Margin="0,0,18,0"
@@ -83,7 +84,7 @@
                 LastChildFill="True">
                 <TextBlock
                     Margin="0,5,0,0"
-                    Text="Trigger by double tap" 
+                    Text="Trigger by double tap:" 
                     />
                 <StackPanel
                     Margin="0,0,18,0"
@@ -99,6 +100,34 @@
                 </StackPanel>
             </DockPanel>
         </StackPanel>
+
+        <StackPanel
+        Grid.Row="3"
+        HorizontalAlignment="Stretch"
+        Orientation="Vertical">
+        <DockPanel
+            Margin="15"
+            HorizontalAlignment="Stretch"
+            LastChildFill="True">
+            <TextBlock
+                Margin="0,5,0,0"
+                Text="Double tap sensitivity (ms):"/>
+            <StackPanel
+                Margin="0,0,18,0"
+                Orientation="Horizontal"
+                HorizontalAlignment="Right"
+                DockPanel.Dock="Right">
+                
+                <TextBox
+                        Width="360"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Text="{Binding DoubleTapTimeout}"
+                        IsEnabled="{Binding DoubleTap}"
+                        TextWrapping="NoWrap" />
+            </StackPanel>
+        </DockPanel>
+    </StackPanel>
 
     </Grid>
 </UserControl>

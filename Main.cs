@@ -1,7 +1,9 @@
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Windows.Controls;
 using AutoHotkey.Interop;
 namespace Flow.Launcher.Plugin.WinHotkey
@@ -163,7 +165,6 @@ namespace Flow.Launcher.Plugin.WinHotkey
                         Send, #
                         return
                     }}
-
                     {(_settings.DoubleTap ? $@"
                     if (Interr_PriorKey != ""{_settings.InterrModifier}"" || (A_TickCount - First_Tap_Time) > 500)
                     {{
@@ -172,19 +173,23 @@ namespace Flow.Launcher.Plugin.WinHotkey
                         return
                     }}
                     " : "")}
-
-                    
                     {(_settings.DoubleTap ? $@"
-                    if (Interr_PriorKey != ""{_settings.InterrModifier}"" || (A_TickCount - First_Tap_Time) > 500)
+                    if (Interr_PriorKey != ""{_settings.InterrModifier}"" || (A_TickCount - First_Tap_Time) > {_settings.DoubleTapTimeout})
                     {{
                         First_Tap_Time := A_TickCount  ; Set First_Tap_Time to the current tick count
                         Interr_PriorKey := A_PriorKey
                         return
                     }}
                     " : "")}
-
                     if ({(_settings.DoubleTap ? $"Interr_PriorKey = \"{_settings.InterrModifier}\" && " : "")}ElapsedTime < {Timeout}) ; Time between press and release is less than 200 milliseconds
                     {{
+
+                        ; Get the class of the currently active window
+                        WinGetClass, activeWindowClass, A
+                        if (activeWindowClass = ""Windows.UI.Core.CoreWindow"" || activeWindowClass = ""Shell_TrayWnd"")
+                        {{
+                            Send, {{Esc}}
+                        }}
                         ; Simulate Alt+Space
                         Send, {GetHotkeyInAhkFormat()}
                         return
@@ -225,11 +230,36 @@ namespace Flow.Launcher.Plugin.WinHotkey
             this.InitializeComponent();
         }
     }
+
+    
     public class Settings
     {
         private string _timeout = "200";
-        public bool DoubleTap {get; set;} = true;
-        public string InterrModifier {get; set;} = "LControl";
+        public string _doubleTapTimeout = "500";
+        public string DoubleTapTimeout 
+        {
+            
+            get
+            {
+                return _doubleTapTimeout;
+            }
+            set
+            {
+                if (Convert.ToInt32(value) < 200)
+                {
+                    _doubleTapTimeout = "200";
+                }
+                else
+                {
+                    _doubleTapTimeout = value;
+                }
+            }
+
+        }
+        public bool DoubleTap {get; set;} = false;
+        public string InterrModifier {get; set;} = "LWin";
+
+        [JsonIgnore]
         public List<string> Modifiers {get; } = new List<string> {"LWin", "LControl", "LAlt", "LShift"};
         public string Timeout
         {
