@@ -260,7 +260,7 @@ namespace Flow.Launcher.Plugin.WinHotkey
         public string InterrModifier {get; set;} = "LWin";
 
         [JsonIgnore]
-        public List<string> Modifiers {get; } = new List<string> {"LWin", "LControl", "LAlt", "LShift"};
+        public List<string> Modifiers {get; } = new List<string> {"LWin", "LControl", "LAlt"};
         public string Timeout
         {
             get
