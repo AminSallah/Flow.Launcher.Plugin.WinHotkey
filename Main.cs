@@ -142,6 +142,25 @@ namespace Flow.Launcher.Plugin.WinHotkey
         {
             return new List<Result>();
         }
+
+        public string ReleaseMappedButton()
+        {
+            string ahkFormat = string.Empty;
+            switch (_settings.InterrModifier)
+            {
+                case "LAlt":
+                    ahkFormat = "!";
+                    break;
+                case "LWin":
+                    ahkFormat = "#";
+                    break;
+                case "LControl":
+                    ahkFormat = "^";
+                    break;
+            }
+            return ahkFormat;
+
+        }
         public void Hook()
         {
             if (!_context.CurrentPluginMetadata.Disabled)
@@ -162,7 +181,7 @@ namespace Flow.Launcher.Plugin.WinHotkey
                     if (A_PriorKey != ""{_settings.InterrModifier}"")
                     {{
                         {(_settings.DoubleTap ? "Interr_PriorKey := A_PriorKey" : "")}
-                        Send, #
+                        Send, {ReleaseMappedButton()}
                         return
                     }}
                     {(_settings.DoubleTap ? $@"
