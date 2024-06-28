@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - '*'  # Trigger on push events for all branches
+  pull_request:
+    branches:
+      - '*'  # Trigger on push events for all branches
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '7.x'
+
+    - name: Restore dependencies
+      run: dotnet restore ./Flow.Launcher.Plugin.WinHotkey.csproj
+
+    - name: Publish project without self-contained
+      run: dotnet publish -c Release -r win-x64 --no-self-contained ./Flow.Launcher.Plugin.WinHotkey.csproj
+
+    # Attach the zip file to the pull request
+    - name: Upload DLL zip artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: Flow.Launcher.Plugin.WinHotkey.dll
+        path: "./bin/Release/win-x64/publish/Flow.Launcher.Plugin.WinHotkey.dll"
+        
