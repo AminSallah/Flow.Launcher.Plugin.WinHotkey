@@ -178,12 +178,6 @@ namespace Flow.Launcher.Plugin.WinHotkey
                     ; Calculate the time elapsed
                     ElapsedTime := A_TickCount - KeyboardStartTime
 
-                    if (A_PriorKey != ""{_settings.InterrModifier}"")
-                    {{
-                        {(_settings.DoubleTap ? "Interr_PriorKey := A_PriorKey" : "")}
-                        Send, {ReleaseMappedButton()}
-                        return
-                    }}
 
                     if (A_PriorKey == ""s"")
                     {{
@@ -195,6 +189,13 @@ namespace Flow.Launcher.Plugin.WinHotkey
                         }}
                         ; Simulate Alt+Space
                         Send, {GetHotkeyInAhkFormat()}
+                        return
+                    }}
+                    
+                    if (A_PriorKey != ""{_settings.InterrModifier}"")
+                    {{
+                        {(_settings.DoubleTap ? "Interr_PriorKey := A_PriorKey" : "")}
+                        Send, {ReleaseMappedButton()}
                         return
                     }}
                     
