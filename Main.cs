@@ -172,14 +172,7 @@ namespace Flow.Launcher.Plugin.WinHotkey
                 {(_settings.DoubleTap ? "First_Tap_Time := 0 " : "")}
                 ~{_settings.InterrModifier}::
                     Send, {{Blind}}{{VKFF}}
-                    KeyboardStartTime := A_TickCount ; Record the start time
-                    KeyWait, {_settings.InterrModifier}
-                    
-                    ; Calculate the time elapsed
-                    ElapsedTime := A_TickCount - KeyboardStartTime
-
-
-                    if (A_PriorKey == ""s"")
+                     if (A_PriorKey == ""s"")
                     {{
                         ; Get the class of the currently active window
                         WinGetClass, activeWindowClass, A
@@ -191,6 +184,14 @@ namespace Flow.Launcher.Plugin.WinHotkey
                         Send, {GetHotkeyInAhkFormat()}
                         return
                     }}
+                    KeyboardStartTime := A_TickCount ; Record the start time
+                    KeyWait, {_settings.InterrModifier}
+                    
+                    ; Calculate the time elapsed
+                    ElapsedTime := A_TickCount - KeyboardStartTime
+
+
+                   
                     
                     if (A_PriorKey != ""{_settings.InterrModifier}"")
                     {{
