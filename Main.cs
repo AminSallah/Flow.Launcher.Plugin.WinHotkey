@@ -184,6 +184,20 @@ namespace Flow.Launcher.Plugin.WinHotkey
                         Send, {ReleaseMappedButton()}
                         return
                     }}
+
+                    if (A_PriorKey != ""s"")
+                    {{
+                        ; Get the class of the currently active window
+                        WinGetClass, activeWindowClass, A
+                        if (activeWindowClass = ""Windows.UI.Core.CoreWindow"" || activeWindowClass = ""Shell_TrayWnd"")
+                        {{
+                            Send, {{Esc}}
+                        }}
+                        ; Simulate Alt+Space
+                        Send, {GetHotkeyInAhkFormat()}
+                        return
+                    }}
+                    
                     {(_settings.DoubleTap ? $@"
                     if (Interr_PriorKey != ""{_settings.InterrModifier}"" || (A_TickCount - First_Tap_Time) > 500)
                     {{
