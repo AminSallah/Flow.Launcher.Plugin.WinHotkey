@@ -1,6 +1,6 @@
-# Flow Launcher LWin Plugin
+# Flow Launcher WinHotkey Plugin
 
-This is a simple plugin designed to activate Flow Launcher using the `LWin` (Left Windows) button instead of the default `Alt` + `Space` hotkey.
+This is a simple plugin designed to activate Flow Launcher using the `Win` (Windows) buttons instead of the default `Alt` + `Space` hotkey.
 
 ## Installation
 

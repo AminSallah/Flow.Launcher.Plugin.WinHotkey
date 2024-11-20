@@ -157,6 +157,15 @@ namespace Flow.Launcher.Plugin.WinHotkey
                 case "LControl":
                     ahkFormat = "^";
                     break;
+                case "RWin":
+                    ahkFormat = "RWin";
+                    break;
+                case "RControl":
+                    ahkFormat = "RControl";
+                    break;
+                case "RAlt":
+                    ahkFormat = "RAlt";
+                    break;
             }
             return ahkFormat;
 
@@ -279,7 +288,7 @@ namespace Flow.Launcher.Plugin.WinHotkey
         public string InterrModifier {get; set;} = "LWin";
 
         [JsonIgnore]
-        public List<string> Modifiers {get; } = new List<string> {"LWin", "LControl", "LAlt"};
+        public List<string> Modifiers {get; } = new List<string> {"LWin", "LControl", "LAlt", "RWin", "RControl", "RAlt"};
         public string Timeout
         {
             get
